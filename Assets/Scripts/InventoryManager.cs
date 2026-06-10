@@ -1,9 +1,12 @@
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class InventoryManager : MonoBehaviour
 {
+    [SerializeField] TextMeshProUGUI itemSlot;
+    [SerializeField] Transform inventoryContainer;
     [SerializeField] Button button;
     public List<Item> playerInventory = new List<Item>(); // can simply use new()
 
@@ -26,7 +29,23 @@ public class InventoryManager : MonoBehaviour
         ItemCategory generatedCategory = (ItemCategory)randomCategory;
 
         Item item = new Item(generatedCategory.ToString(), randomValue, generatedCategory);
-        
+
         playerInventory.Add(item);
+
+        RefreshUI();
+    }
+
+    void RefreshUI()
+    {
+        foreach (Transform item in inventoryContainer)
+        {
+            Destroy(item.gameObject);
+        }
+
+        foreach (Item item in playerInventory)
+        {
+            TextMeshProUGUI spawnedItem = Instantiate(itemSlot, inventoryContainer);
+            spawnedItem.text = $"{item.name}-{item.category}-{item.value}g";
+        }
     }
 }
